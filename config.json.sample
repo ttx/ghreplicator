@@ -1,5 +1,7 @@
 {
   "trigger": "MQTTTrigger",
   "triggerargs": { "server": "firehose.openstack.org",
-                   "topic": "gerrit/+/+/change-merged" }
+                   "topic": "gerrit/+/+/change-merged" },
+  "mapper": "InConfigMapper",
+  "mapperargs": { "openstack/nova": "openstack/nova" }
 }

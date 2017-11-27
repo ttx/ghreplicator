@@ -20,7 +20,7 @@ import json
 import logging.config
 import os
 
-from ghreplicator import triggers
+from ghreplicator import mappers, triggers
 
 
 try:
@@ -29,10 +29,6 @@ except ImportError:
     # as of python-daemon 1.6 it doesn't bundle pidlockfile anymore
     # instead it depends on lockfile-0.9.1
     import daemon.pidfile as pid_file_module
-
-
-def handle(msg):
-    print(msg)
 
 
 def start(configpath):
@@ -48,6 +44,18 @@ def start(configpath):
     else:
         logging.basicConfig(level=logging.DEBUG)
 
+    if 'mapper' not in config:
+        print('AARRRRRGH')
+
+    mapperclass = getattr(mappers, config['mapper'])
+
+    if 'mapperargs' in config:
+        args = config['mapperargs']
+    else:
+        args = {}
+
+    mapper = mapperclass(**args)
+
     if 'trigger' not in config:
         print('AARRRRRGH')
 
@@ -57,6 +65,10 @@ def start(configpath):
         args = config['triggerargs']
     else:
         args = {}
+
+    def handle(msg):
+        print(mapper.map('openstack/nova'))
+        print(msg)
 
     client = triggerclass(callback=handle, **args)
     client.run()
