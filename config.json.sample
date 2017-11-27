@@ -1,0 +1,5 @@
+{
+  "trigger": "MQTTTrigger",
+  "triggerargs": { "server": "firehose.openstack.org",
+                   "topic": "gerrit/+/+/change-merged" }
+}
