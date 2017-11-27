@@ -22,3 +22,12 @@ class InConfigMapper:
 
     def map(self, original):
         return self.configmap.get(original, '')
+
+
+class IdenticalMapper:
+
+    def __init__(self, **argv):
+        pass
+
+    def map(self, original):
+        return original

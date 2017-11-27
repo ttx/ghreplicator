@@ -66,9 +66,9 @@ def start(configpath):
     else:
         args = {}
 
-    def handle(msg):
-        print(mapper.map('openstack/nova'))
-        print(msg)
+    def handle(origin, revision):
+        target = mapper.map(origin)
+        print("%s -> %s: copy %s" % (origin, target, revision))
 
     client = triggerclass(callback=handle, **args)
     client.run()

@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
 import paho.mqtt.client as mqtt
 
 
@@ -31,7 +32,8 @@ class MQTTTrigger:
         self.client.on_connect = on_connect
 
         def on_message(client, userdata, msg):
-            callback(msg.topic + " " + str(msg.payload))
+            data = json.loads(msg.payload)
+            callback(data['project'], data['newRev'])
 
         self.client.on_message = on_message
 
