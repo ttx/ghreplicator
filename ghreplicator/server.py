@@ -83,7 +83,7 @@ def main():
 
     if not args.nodaemon:
         pid = pid_file_module.TimeoutPIDLockFile(
-            "/var/run/ptgbot/ptgbot.pid", 10)
+            "/var/run/ghreplicator/ghreplicator.pid", 10)
         with daemon.DaemonContext(pidfile=pid):
             start(args.configfile)
     start(args.configfile)
