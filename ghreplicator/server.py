@@ -20,7 +20,7 @@ import json
 import logging.config
 import os
 
-from ghreplicator import mappers, triggers
+from ghreplicator import mappers, triggers, handlers
 
 
 try:
@@ -44,6 +44,8 @@ def start(configpath):
     else:
         logging.basicConfig(level=logging.DEBUG)
 
+    # Load configured mapper
+    # Mappers calculate destination name based on original name
     if 'mapper' not in config:
         print('AARRRRRGH')
 
@@ -56,6 +58,23 @@ def start(configpath):
 
     mapper = mapperclass(**args)
 
+    # Load configured handler
+    # Handlers take original and destination names and do whatever
+    # it is they do on them, like replicating git repositories
+    if 'handler' not in config:
+        print('AARRRRRGH')
+
+    handlerclass = getattr(handlers, config['handler'])
+
+    if 'handlerargs' in config:
+        args = config['handlerargs']
+    else:
+        args = {}
+
+    handler = handlerclass(**args)
+
+    # Load configured trigger
+    # Triggers generate events
     if 'trigger' not in config:
         print('AARRRRRGH')
 
@@ -66,11 +85,12 @@ def start(configpath):
     else:
         args = {}
 
-    def handle(origin, revision):
+    def process(origin, revision):
         target = mapper.map(origin)
+        handler.process(origin, target, revision)
         print("%s -> %s: copy %s" % (origin, target, revision))
 
-    client = triggerclass(callback=handle, **args)
+    client = triggerclass(callback=process, **args)
     client.run()
 
 

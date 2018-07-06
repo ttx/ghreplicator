@@ -4,4 +4,5 @@
                    "topic": "gerrit/+/+/change-merged" },
   "mapper": "InConfigMapper",
   "mapperargs": { "openstack/nova": "openstack/nova" }
+  "handler": "PrintHandler"
 }
